@@ -6,7 +6,7 @@ const formatMessage = require('./utils/messages');
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
-const {userJoin, getCurrentUser} = require('./utils/users');
+const {userJoin, getCurrentUser, userLeave, getRoomUsers} = require('./utils/users');
 
 // set static folder
 app.use(express.static(path.join(__dirname, 'public')));
@@ -39,7 +39,10 @@ io.on('connection', socket =>{
 
     // vase disconnect :
     socket.on('disconnect', ()=>{
-        io.emit('message', formatMessage(botName, 'a User has left the Chat !'));
+        const user = userLeave(socket.id);
+        if(user){
+            io.to(user.room).emit('message', formatMessage(botName, `${user.username} has left the Chat !`));    
+        }
     });
 });
 
