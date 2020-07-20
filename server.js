@@ -29,6 +29,11 @@ io.on('connection', socket =>{
         socket.broadcast.to(user.room).emit('message', formatMessage(botName, `${user.username} has joined the Chat !`));
 
         // ye method e io.emit() ham darim ke be hame mige
+
+        io.to(user.room).emit('roomUsers', {
+            room: user.room,
+            users: getRoomUsers(user.room)
+        });
     });
 
     // listen for chat messages :
@@ -42,6 +47,11 @@ io.on('connection', socket =>{
         const user = userLeave(socket.id);
         if(user){
             io.to(user.room).emit('message', formatMessage(botName, `${user.username} has left the Chat !`));    
+        
+            io.to(user.room).emit('roomUsers', {
+                room: user.room,
+                users: getRoomUsers(user.room)
+            });
         }
     });
 });
