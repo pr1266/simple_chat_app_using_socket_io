@@ -6,7 +6,7 @@ const formatMessage = require('./utils/messages');
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
-
+const {userJoin, getCurrentUser} = require('./utils/users');
 
 // set static folder
 app.use(express.static(path.join(__dirname, 'public')));
@@ -18,19 +18,23 @@ io.on('connection', socket =>{
 
     socket.on('joinRoom', ({username, room})=>{
         
+        const user = userJoin(socket.id, username, room);
+        //! ino nafahmidam chi mikone :
+        socket.join(user.room);
         // in faghat be ye client mige :
         socket.emit('message', formatMessage(botName, 'wellcome to chat !'));
 
         // BroadCast when a user connects
         // in broadcast mikone be hame gheir az khod e oon user
-        socket.broadcast.emit(formatMessage(botName,'message', 'a User has joined the Chat !'));
+        socket.broadcast.to(user.room).emit('message', formatMessage(botName, `${user.username} has joined the Chat !`));
 
         // ye method e io.emit() ham darim ke be hame mige
     });
 
     // listen for chat messages :
     socket.on('chatMessage', (msg)=>{
-        io.emit('message', formatMessage('User', msg));
+        const user = getCurrentUser(socket.id);
+        io.to(user.room).emit('message', formatMessage(user.username, msg));
     });
 
     // vase disconnect :
