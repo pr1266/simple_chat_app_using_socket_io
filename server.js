@@ -15,6 +15,26 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Run when a client connects
 io.on('connection', socket =>{
     console.log('new WS connected');
+
+    // in faghat be ye client mige :
+    socket.emit('message', 'wellcome to chat !');
+
+    // BroadCast when a user connects
+    // in broadcast mikone be hame gheir az khod e oon user
+    socket.broadcast.emit('message', 'a User has joined the Chat !');
+
+    // ye method e io.emit() ham darim ke be hame mige
+
+
+    // vase disconnect :
+    socket.on('disconnect', ()=>{
+        io.emit('message', 'a User has left the Chat !');
+    });
+
+    // listen for chat messages :
+    socket.on('chatMessage', (msg)=>{
+        console.log(msg);
+    });
 });
 
 const PORT = process.env.PORT || 3000
