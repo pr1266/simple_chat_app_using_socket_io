@@ -11,7 +11,7 @@ const {userJoin, getCurrentUser, userLeave, getRoomUsers} = require('./utils/use
 // set static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-const botName = 'ChatCord bot';
+const botName = '1266 admin';
 
 // Run when a client connects
 io.on('connection', socket =>{
@@ -27,7 +27,6 @@ io.on('connection', socket =>{
         // BroadCast when a user connects
         // in broadcast mikone be hame gheir az khod e oon user
         socket.broadcast.to(user.room).emit('message', formatMessage(botName, `${user.username} has joined the Chat !`));
-
         // ye method e io.emit() ham darim ke be hame mige
 
         io.to(user.room).emit('roomUsers', {
