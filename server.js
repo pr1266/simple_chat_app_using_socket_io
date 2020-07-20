@@ -3,7 +3,7 @@ const path = require('path');
 const http = require('http');
 const socketio = require('socket.io');
 
-
+const formatMessage = require('./utils/messages');
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
@@ -12,12 +12,14 @@ const io = socketio(server);
 // set static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
+const botName = 'ChatCord bot';
+
 // Run when a client connects
 io.on('connection', socket =>{
     console.log('new WS connected');
 
     // in faghat be ye client mige :
-    socket.emit('message', 'wellcome to chat !');
+    socket.emit('message', formatMessage(botName, 'wellcome to chat !'));
 
     // BroadCast when a user connects
     // in broadcast mikone be hame gheir az khod e oon user
