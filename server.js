@@ -17,7 +17,7 @@ const botName = 'ChatCord bot';
 io.on('connection', socket =>{
 
     socket.on('joinRoom', ({username, room})=>{
-    
+        
         // in faghat be ye client mige :
         socket.emit('message', formatMessage(botName, 'wellcome to chat !'));
 
